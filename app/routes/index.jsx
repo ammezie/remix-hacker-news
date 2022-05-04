@@ -1,12 +1,15 @@
-import { Link, json, useLoaderData } from 'remix'
+import { useLoaderData } from '@remix-run/react'
 import Item from '~/components/Item'
+import { getTopStories, getItem } from '~/helper/fetch'
 
 export const loader = async () => {
-  const res = await fetch(
-    'https://hacker-news.firebaseio.com/v0/topstories.json'
+  const topStoryIds = await getTopStories()
+
+  const items = await Promise.all(
+    topStoryIds.slice(0, 10).map(async (itemId) => await getItem(itemId))
   )
 
-  return json(await res.json())
+  return items
 }
 
 export default function Index() {
@@ -15,8 +18,8 @@ export default function Index() {
   return (
     <div className="divide-y">
       {items.length > 0 &&
-        items.slice(0, 10).map((itemId) => {
-          return <Item item={itemId} key={itemId} />
+        items.map((item) => {
+          return <Item item={item} key={item.id} />
         })}
     </div>
   )

@@ -1,28 +1,14 @@
-import { Link } from 'remix'
-import { useEffect, useState } from 'react'
-import { getItemComments } from '~/helper/fetch'
+import { Link } from '@remix-run/react'
 
-export default function Comment({ item }) {
-  const [comment, setComment] = useState()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    getItemComments(item).then((result) => {
-      setComment(result)
-      setLoading(false)
-    })
-  }, [])
-
+export default function Comment({ comment }) {
   return (
     <div className="flex items-center space-x-4 p-4">
-      {loading && <h3>Loading...</h3>}
-      {!loading && comment && (
+      {comment && (
         <>
-          <div className="text-orange-500 font-medium self-start place-self-start ">
+          <div className="text-orange-500 font-medium self-start place-self-start">
             {comment.score}
           </div>
           <div>
-            <h3 className="text-gray-700"></h3>
             {comment.text && !comment.deleted && (
               <div
                 className="overflow-hidden text-sm text-gray-500"
